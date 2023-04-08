@@ -1,15 +1,9 @@
 
 import openai
-import os
 
-# APIキーの設定
-openai.api_key = os.getenv("API_KEY_OPENAI")
+def translate_text_to_japanese(text: str, api_key: str) -> str:
+    openai.api_key = api_key
 
-CONTENT = """
-English content to be translated to Japanese.
-"""
-
-def translate_text_to_japanese(text):
     response = openai.Completion.create(
         engine="text-davinci-002",
         prompt=f"Translate the following English text to Japanese: '{text}'",
@@ -22,9 +16,3 @@ def translate_text_to_japanese(text):
 
     translated_text = response.choices[0].text.strip()
     return translated_text
-
-if __name__ == "__main__":
-    english_text = CONTENT
-    japanese_text = translate_text_to_japanese(english_text)
-
-    print(japanese_text)
