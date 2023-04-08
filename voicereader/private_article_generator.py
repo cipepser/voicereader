@@ -22,9 +22,10 @@ def create_private_article_in_qiita(access_token: str, title: str, content: str)
     response = requests.post(url, data=json.dumps(payload), headers=headers)
 
     if response.status_code == 201:
-        print("Success to post an article to Qiita as private.")
         article_data = json.loads(response.text)
-        return article_data['url']
+        url = article_data['url']
+        print("Success to post an article to Qiita as private. url: {}".format(url))
+        return url
     else:
         print(f"Failed to post an article with status code: {response.status_code}")
         print(response.text)
