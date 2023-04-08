@@ -17,7 +17,7 @@ def add_to_pocket(consumer_key, access_token, url):
         print("response:", response.text)
 
 if __name__ == "__main__":
-    consumer_key = os.getenv("CONSUMER_KEY")
+    consumer_key = os.getenv("CONSUMER_KEY_POCKET")
     access_token = os.getenv("ACCESS_TOKEN_POCKET")
     url = "https://example.com"
 

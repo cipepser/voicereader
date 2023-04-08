@@ -3,7 +3,7 @@ import openai
 import os
 
 # APIキーの設定
-openai.api_key = os.getenv("OPENAI_API_KEY")
+openai.api_key = os.getenv("API_KEY_OPENAI")
 
 CONTENT = """
 English content to be translated to Japanese.
