@@ -2,13 +2,13 @@ name: run-daily-checker
 description: add articles which is newly appeared in HackerNews RSS feed to pocket with translating to Japanese
 
 inputs:
-  - access_token_pocket:
+  access_token_pocket:
     required: true
-  - access_token_qiita:
+  access_token_qiita:
     required: true
-  - api_key_openai:
+  api_key_openai:
     required: true
-  - consumer_key_pocket:
+  consumer_key_pocket:
     required: true
 
 runs:
