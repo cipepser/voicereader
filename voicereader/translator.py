@@ -8,7 +8,7 @@ def translate_text_to_japanese(text: str, api_key: str) -> str:
         engine="text-davinci-002",
         prompt=f"Translate the following English text to Japanese: '{text}'",
         temperature=0.7,
-        max_tokens=2000,
+        max_tokens=4097,
         top_p=1,
         frequency_penalty=0,
         presence_penalty=0,
