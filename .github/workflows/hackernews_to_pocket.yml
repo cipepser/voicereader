@@ -23,7 +23,7 @@ jobs:
           python-version: 3.9
 
       - name: Run My Custom Action
-        uses: ./.github/workflows/_dbt_run_test.yml
+        uses: ./.github/actions//daily-checker/action.yml
         with:
           access_token_pocket: ${{ secrets.ACCESS_TOKEN_POCKET }}
           access_token_qiita: ${{ secrets.ACCESS_TOKEN_QIITA }}
