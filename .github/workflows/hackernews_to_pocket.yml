@@ -1,0 +1,26 @@
+name: hackernews_to_pocket
+
+on:
+  schedule:
+    # 21:00 UTC = 06:00 JST
+    - cron:  '0 21 * * *'
+
+jobs:
+  run_daily_chekcer:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+
+      - name: Run My Custom Action
+        uses: ./.github/workflows/_dbt_run_test.yml
+        with:
+          access_token_pocket: ${{ secrets.ACCESS_TOKEN_POCKET }}
+          access_token_qiita: ${{ secrets.ACCESS_TOKEN_QIITA }}
+          api_key_openai: ${{ secrets.API_KEY_OPENAI }}
+          consumer_key_pocket: ${{ secrets.CONSUMER_KEY_POCKET }}

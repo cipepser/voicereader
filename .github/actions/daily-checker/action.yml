@@ -1,0 +1,30 @@
+name: run-daily-checker
+description: add articles which is newly appeared in HackerNews RSS feed to pocket with translating to Japanese
+
+inputs:
+  - access_token_pocket:
+    required: true
+  - access_token_qiita:
+    required: true
+  - api_key_openai:
+    required: true
+  - consumer_key_pocket:
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r ./.github/actions/daily-checker/requirements.txt
+      shell: bash
+
+    - name: Run my Python script
+      run: python ./.github/actions/daily-checker/main.py
+      shell: bash
+      env:
+        ACCESS_TOKEN_POCKET: ${{ inputs.access_token_pocket }}
+        ACCESS_TOKEN_QIITA:  ${{ inputs.access_token_qiita }}
+        API_KEY_OPENAI:  ${{ inputs.api_key_openai }}
+        CONSUMER_KEY_POCKET:  ${{ inputs.consumer_key_pocket }}
