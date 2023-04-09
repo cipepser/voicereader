@@ -2,11 +2,19 @@ import requests
 from bs4 import BeautifulSoup
 from typing import Tuple
 
+class ContentExtractorError(Exception):
+    def __init__(self, original_exception):
+        self.original_exception = original_exception
+        super().__init__(f"An error occurred in the other library: {original_exception}")
+
 def extract_article_from_hackernews(url: str) -> Tuple[str, str]:
-    response = requests.get(url)
+    try:
+        response = requests.get(url)
+    except Exception as e:
+        raise ContentExtractorError(e)
+
     if response.status_code != 200:
-        print(f"Error {response.status_code}: Unable to fetch URL content")
-        return None
+        raise ContentExtractorError(f"Error {response.status_code}: Unable to fetch URL({url}) content")
 
     soup = BeautifulSoup(response.content, "html.parser")
     title = soup.find("title").text

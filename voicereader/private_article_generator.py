@@ -2,6 +2,11 @@ import requests
 import json
 from typing import Optional
 
+class QiitaError(Exception):
+    def __init__(self, original_exception):
+        self.original_exception = original_exception
+        super().__init__(f"An error occurred in the other library: {original_exception}")
+
 def create_private_article_in_qiita(access_token: str, title: str, content: str) -> Optional[str]:
     url = "https://qiita.com/api/v2/items"
 
@@ -19,7 +24,10 @@ def create_private_article_in_qiita(access_token: str, title: str, content: str)
         "Authorization": f"Bearer {access_token}",
     }
 
-    response = requests.post(url, data=json.dumps(payload), headers=headers)
+    try:
+        response = requests.post(url, data=json.dumps(payload), headers=headers)
+    except Exception as e:
+        raise QiitaError(e)
 
     if response.status_code == 201:
         article_data = json.loads(response.text)
@@ -27,6 +35,4 @@ def create_private_article_in_qiita(access_token: str, title: str, content: str)
         print("Success to post an article to Qiita as private. url: {}".format(url))
         return url
     else:
-        print(f"Failed to post an article with status code: {response.status_code}")
-        print(response.text)
-        return None
+        raise QiitaError(f"Failed to post an article with status code: {response.status_code}, response: {response.text}")
