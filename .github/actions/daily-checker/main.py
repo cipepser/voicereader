@@ -17,9 +17,9 @@ if __name__ == "__main__":
     for source_content_url in urls:
         title, article_text = extract_article_from_hackernews(source_content_url)
         if article_text:
-            print("got the article which title is ': {}'".format(title))
+            print("got an article. title: '{}'".format(title))
         else:
-            print("no text in the article which title is ': {}'".format(title))
+            print("no text in the article. title: '{}'".format(title))
 
         japanese_text = translate_text_to_japanese(article_text, os.getenv("API_KEY_OPENAI"))
         qiita_url = create_private_article_in_qiita(os.getenv("ACCESS_TOKEN_QIITA"), title, japanese_text)
