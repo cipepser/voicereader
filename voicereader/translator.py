@@ -8,14 +8,14 @@ class OpenAIError(Exception):
 
 # 生成されるtokenとpromptのtoken数が合計したカウントがmax_tokensになる。
 # https://platform.openai.com/docs/api-reference/completions/create
-# サンプル的に日本語と英語でtoken数は3:1くらいになるので、text-davinci-002のmax_tokensは4097に対して、3072を設定
+# サンプル的に日本語と英語でtoken数は3:1くらいになるので、text-davinci-003のmax_tokensは4097に対して、3072を設定
 
 def translate_text_to_japanese(text: str, api_key: str) -> str:
     openai.api_key = api_key
 
     try:
         response = openai.Completion.create(
-            engine="text-davinci-002",
+            engine="text-davinci-003",
             prompt=f"Translate the following English text to Japanese: '{text}'",
             temperature=0.7,
             max_tokens=3072,
