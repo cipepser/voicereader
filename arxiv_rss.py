@@ -1,8 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
-from datetime import datetime
-from typing import Tuple, List, Optional
+from typing import List, Optional
 import re
+from voicereader.title_filter import contains_key_words
 
 BASE_URL_ARXIV = "https://arxiv.org"
 
@@ -56,4 +56,5 @@ n = number_items_in_yeesterday(soup)
 
 titles_and_links = get_arxiv_recent_titles_and_links(soup, n)
 for (title, link) in titles_and_links:
-    print(title, ":", link)
+    if contains_key_words(title):
+        print(title, ":", link)
