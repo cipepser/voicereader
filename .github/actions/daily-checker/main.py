@@ -9,6 +9,7 @@ sys.path.insert(0, str(root_path))
 from voicereader.implementations.destination.qiita_pocket import QiitaPocketDestinator
 from voicereader.implementations.translator.openai import OpenAITranslator, OpenAIError
 from voicereader.implementations.source.hacker_news import HackerNewsExtractor
+from voicereader.implementations.source.arxiv import ArxivExtractor
 
 logging.basicConfig(
     format='%(asctime)s [%(levelname)s] %(filename)s:%(lineno)d - %(message)s',
@@ -23,8 +24,14 @@ if __name__ == "__main__":
         pocket_access_token=os.getenv("ACCESS_TOKEN_POCKET")
     )
 
+    untranslated_transactions = []
     try:
-        untranslated_transactions = HackerNewsExtractor().extract()
+        untxs = HackerNewsExtractor().extract()
+        untranslated_transactions.append(untxs)
+
+        untxs = ArxivExtractor.extract()
+        untranslated_transactions.append(untxs)
+
     except Exception as e:
         logging.error(e)
         sys.exit(1)
