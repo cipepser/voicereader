@@ -12,6 +12,9 @@ class TranslatedTransaction:
         self.article_text_jp = article_text_jp
         self.tag = tag
 
+    def __repr__(self):
+        return f"TranslatedTransaction(\n\ttitle={self.title}\n\tarticle_text_jp={self.article_text_jp[:60]}...\n\ttag={self.tag}\n)"
+
     def get_title(self) -> str:
         return self.title
 
