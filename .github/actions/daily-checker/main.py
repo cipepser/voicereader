@@ -26,12 +26,8 @@ if __name__ == "__main__":
 
     untranslated_transactions = []
     try:
-        untxs = HackerNewsExtractor().extract()
-        untranslated_transactions.append(untxs)
-
-        untxs = ArxivExtractor().extract()
-        untranslated_transactions.append(untxs)
-
+        untranslated_transactions += HackerNewsExtractor().extract()
+        untranslated_transactions += ArxivExtractor().extract()
     except Exception as e:
         logging.error(e)
         sys.exit(1)
