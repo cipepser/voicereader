@@ -1,5 +1,6 @@
 import requests
 import json
+import logging
 from typing import Optional
 from voicereader.protocols.destination import Destinator, TranslatedTransaction
 
@@ -52,11 +53,12 @@ class QiitaPocketDestinator(Destinator):
         if response.status_code == 201:
             article_data = json.loads(response.text)
             url = article_data['url']
-            print("Success to post an article to Qiita as private. url: {}".format(url))
+            logging.info(f"Success to post an article to Qiita as private. url: {url}")
             return url
         else:
             raise QiitaError(
-                f"Failed to post an article with status code: {response.status_code}, response: {response.text}")
+                f"Failed to post an article with status code: {response.status_code}, response: {response.text}"
+            )
 
     def send_to_reader(self, url: str) -> None:
         payload = {
@@ -72,7 +74,7 @@ class QiitaPocketDestinator(Destinator):
             raise PocketError(e)
 
         if response.status_code == 200:
-            print("Add a URL to Pocket.")
+            logging.info(f"Add a URL to Pocket, url: {url}")
         else:
             raise PocketError(
                 f"Failed to add a URL with status code: {response.status_code}, response: {response.text}")
