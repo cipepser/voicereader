@@ -1,4 +1,4 @@
-name: hackernews_to_pocket
+name: article_to_pocket
 
 on:
   schedule:
