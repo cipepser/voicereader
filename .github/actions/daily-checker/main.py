@@ -29,7 +29,7 @@ if __name__ == "__main__":
         untxs = HackerNewsExtractor().extract()
         untranslated_transactions.append(untxs)
 
-        untxs = ArxivExtractor.extract()
+        untxs = ArxivExtractor().extract()
         untranslated_transactions.append(untxs)
 
     except Exception as e:
