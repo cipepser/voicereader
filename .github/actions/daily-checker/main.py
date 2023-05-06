@@ -6,33 +6,60 @@ import logging
 root_path = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(root_path))
 
-from voicereader.source_content_extractor import extract_article_from_hackernews
-from voicereader.translator import translate_text_to_japanese, OpenAIError
-from voicereader.private_article_generator import create_private_article_in_qiita
-from voicereader.pocket import add_to_pocket
-from voicereader.rss import get_article_urls
+from voicereader.implementations.destination.qiita_pocket import QiitaPocketDestinator
+from voicereader.implementations.translator.openai import OpenAITranslator, OpenAIError
+from voicereader.implementations.source.hacker_news import HackerNewsExtractor
+from voicereader.implementations.source.arxiv import ArxivExtractor
+
+logging.basicConfig(
+    format='%(asctime)s [%(levelname)s] %(filename)s:%(lineno)d - %(message)s',
+    level=logging.INFO
+)
 
 if __name__ == "__main__":
+    translator = OpenAITranslator(api_key=os.getenv("API_KEY_OPENAI"))
+    destinator = QiitaPocketDestinator(
+        qiita_access_token=os.getenv("ACCESS_TOKEN_QIITA"),
+        pocket_consumer_key=os.getenv("CONSUMER_KEY_POCKET"),
+        pocket_access_token=os.getenv("ACCESS_TOKEN_POCKET")
+    )
+
+    untranslated_transactions = []
     try:
-        urls = get_article_urls()
+        untxs = HackerNewsExtractor().extract()
+        untranslated_transactions.append(untxs)
+
+        untxs = ArxivExtractor.extract()
+        untranslated_transactions.append(untxs)
+
     except Exception as e:
         logging.error(e)
         sys.exit(1)
 
-    print("{} articles has found".format(len(urls)))
-    for source_content_url in urls:
+    logging.info(f"{len(untranslated_transactions)} articles has found")
+    for untx in untranslated_transactions:
         try:
-            title, article_text = extract_article_from_hackernews(source_content_url)
-            if article_text:
-                print("got an article. title: '{}'".format(title))
-            else:
-                print("no text in the article. title: '{}'".format(title))
-
-            japanese_text = translate_text_to_japanese(article_text, os.getenv("API_KEY_OPENAI"))
-            qiita_url = create_private_article_in_qiita(os.getenv("ACCESS_TOKEN_QIITA"), title, japanese_text)
-            add_to_pocket(os.getenv("CONSUMER_KEY_POCKET"), os.getenv("ACCESS_TOKEN_POCKET"), qiita_url)
+            logging.info(f"start translation: {untx.get_title()}")
+            tx = translator.translate(untx)
+            logging.info(f"translated: {tx.get_title()}")
         except OpenAIError as e:
             logging.warning(e)
+            continue
+        except Exception as e:
+            logging.error(e)
+            sys.exit(1)
+
+        try:
+            url = destinator.create_private_article(tx)
+            logging.info(f"created Qiita article, url: {url}")
+        except Exception as e:
+            logging.error(e)
+            sys.exit(1)
+
+        try:
+            if url:
+                destinator.send_to_reader(str(url))
+                logging.info(f"sent to Pocket")
         except Exception as e:
             logging.error(e)
             sys.exit(1)
