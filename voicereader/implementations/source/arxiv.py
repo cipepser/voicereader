@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 from typing import List, Optional, Tuple
 
 from voicereader.protocols.source import ContentExtractor, UntranslatedTransaction
+from voicereader.util.filter import contains_key_words
 
 BASE_URL_ARXIV = "https://arxiv.org"
 FILTER_KEY_WORDS = ["differentially", "privacy", "private", "differential"]
@@ -23,7 +24,7 @@ class ArxivExtractor(ContentExtractor):
 
             titles_and_links = get_arxiv_recent_titles_and_links(soup, n)
             for (title, url) in titles_and_links:
-                if contains_key_words(title):
+                if contains_key_words(title, FILTER_KEY_WORDS):
                     abstract = extract_abstract_from_arxiv(url)
                     article_text = abstract.replace("Abstract:  ", "").replace("\n", " ")
 
@@ -49,9 +50,6 @@ def extract_link_to_all_papers(category: str) -> Optional[str]:
             break
 
     return target_link
-
-def contains_key_words(title: str) -> bool:
-    return any([key_word in title.lower() for key_word in FILTER_KEY_WORDS])
 
 def number_items_in_yeesterday(soup: BeautifulSoup) -> Optional[int]:
     links = [a.get("href") for a in soup.find_all("a", href=True)]
