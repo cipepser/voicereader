@@ -4,7 +4,11 @@ import pytz
 from bs4 import BeautifulSoup
 from typing import Tuple, List
 from datetime import datetime, timedelta
+
 from voicereader.protocols.source import ContentExtractor, UntranslatedTransaction
+from voicereader.util.filter import contains_key_words
+
+EXCLUDE_KEY_WORDS = ["botnet", "ransomware", "malware", "backdoor"]
 
 class RssError(Exception):
     def __init__(self, original_exception):
@@ -24,12 +28,13 @@ class HackerNewsExtractor(ContentExtractor):
 
         for url in get_article_urls():
             title, article = extract_article_from_hackernews(url)
-            tx = UntranslatedTransaction(
-                title=title,
-                article_text_en=article,
-                tag="HackerNews"
-            )
-            txs.append(tx)
+            if not(contains_key_words(title, EXCLUDE_KEY_WORDS)):
+                tx = UntranslatedTransaction(
+                    title=title,
+                    article_text_en=article,
+                    tag="HackerNews"
+                )
+                txs.append(tx)
 
         return txs
 
@@ -72,3 +77,4 @@ def extract_article_from_hackernews(url: str) -> Tuple[str, str]:
         article_text += tag.text + "\n\n"
 
     return title, article_text.strip()
+
