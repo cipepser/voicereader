@@ -26,7 +26,6 @@ if __name__ == "__main__":
 
     untranslated_transactions = []
     try:
-        untranslated_transactions += HackerNewsExtractor().extract()
         untranslated_transactions += ArxivExtractor().extract()
     except Exception as e:
         logging.error(e)
