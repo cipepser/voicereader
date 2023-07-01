@@ -8,7 +8,6 @@ sys.path.insert(0, str(root_path))
 
 from voicereader.implementations.destination.qiita_pocket import QiitaPocketDestinator
 from voicereader.implementations.translator.openai import OpenAITranslator, OpenAIError
-from voicereader.implementations.source.hacker_news import HackerNewsExtractor
 from voicereader.implementations.source.arxiv import ArxivExtractor
 
 logging.basicConfig(
