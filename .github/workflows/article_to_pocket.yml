@@ -1,9 +1,9 @@
 name: article_to_pocket
 
 on:
-  schedule:
+  # schedule:
     # 21:00 UTC = 06:00 JST
-    - cron:  '0 21 * * *'
+    # - cron:  '0 21 * * *'
 
   workflow_dispatch:
     inputs:
